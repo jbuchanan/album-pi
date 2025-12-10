@@ -1,0 +1,31 @@
+[Unit]
+Description=Album Art Server Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/album-pi
+
+# Server app
+ExecStart=/home/pi/album-pi/venv/bin/python /home/pi/album-pi/server_app.py
+
+# Restart settings
+Restart=always
+RestartSec=5
+StartLimitBurst=5
+StartLimitIntervalSec=60
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=album-server
+
+# Security settings
+NoNewPrivileges=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
