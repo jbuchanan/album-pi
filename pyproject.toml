@@ -9,19 +9,6 @@ authors = [
     { name = "Album Pi Contributors" }
 ]
 keywords = ["raspberry-pi", "album-art", "music", "display", "pygame"]
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: POSIX :: Linux",
-    "Operating System :: MacOS",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Topic :: Multimedia :: Graphics :: Viewers",
-]
 
 dependencies = [
     "pygame>=2.1.0",
@@ -48,14 +35,6 @@ blur = [
 Homepage = "https://github.com/jbuchanan/album-pi"
 Repository = "https://github.com/jbuchanan/album-pi"
 Issues = "https://github.com/jbuchanan/album-pi/issues"
-
-[project.scripts]
-album-display = "display_app:run_display"
-album-server = "server_app:main"
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
 
 [tool.uv]
 dev-dependencies = [

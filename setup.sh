@@ -51,8 +51,7 @@ fi
 
 # Create virtual environment and install dependencies with uv
 echo "📦 Installing Python packages with uv..."
-uv venv
-uv pip install -e .
+uv sync
 
 # Create default fallback image
 echo "🖼️  Creating default fallback image..."
