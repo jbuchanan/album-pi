@@ -1,4 +1,17 @@
+# Core dependencies
 pygame>=2.1.0
 flask>=2.0.0
 requests>=2.28.0
 Pillow>=9.0.0
+
+# Configuration
+PyYAML>=6.0
+
+# QR code generation
+qrcode[pil]>=7.3.1
+
+# Image processing (for color extraction)
+numpy>=1.21.0
+
+# Optional: for better blur effects (uncomment if needed)
+# scipy>=1.7.0

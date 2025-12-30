@@ -1,0 +1,111 @@
+# Album Art Display Configuration
+
+# Display Settings
+display:
+  # Resolution (0 for auto-detect)
+  width: 0
+  height: 0
+  # Fullscreen mode (true for Pi, false for Mac testing)
+  fullscreen: true
+  # Target FPS
+  fps: 60
+
+# Image Settings
+image:
+  # Target image size (0 for auto-detect based on display)
+  target_size: 0
+  # Quality (1-100)
+  jpeg_quality: 95
+  # Cache directory
+  cache_dir: "image_cache"
+  # Max cache size in MB
+  max_cache_size_mb: 500
+
+# Transition Effects
+transitions:
+  # Effect type: fade, slide, zoom, blur, random
+  effect: "fade"
+  # Duration in seconds
+  duration: 1.0
+
+# Visual Effects
+effects:
+  # Ambient lighting (colored glow around edges)
+  ambient_light:
+    enabled: true
+    intensity: 0.3  # 0.0 - 1.0
+  # Blur background mode
+  blur_background:
+    enabled: false
+    blur_radius: 20
+
+# Information Overlays
+overlays:
+  # Metadata (song title, artist, album)
+  metadata:
+    enabled: true
+    position: "bottom"  # top, bottom
+    font_size_title: 36
+    font_size_artist: 24
+
+  # Clock overlay
+  clock:
+    enabled: false
+    position: "top-right"  # top-left, top-right, bottom-left, bottom-right
+    format: "12h"  # 12h or 24h
+    font_size: 32
+
+  # Weather overlay (requires OpenWeatherMap API key)
+  weather:
+    enabled: false
+    position: "top-left"
+    api_key: ""
+    location: ""  # City name or lat,lon
+    units: "imperial"  # imperial or metric
+    update_interval: 1800  # seconds
+    font_size: 24
+
+  # QR Code (links to song on Spotify/Apple Music)
+  qr_code:
+    enabled: false
+    position: "bottom-right"
+    size: 150
+
+# Music Sources
+music:
+  # Spotify integration
+  spotify:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    # Auto-update when Spotify playback changes
+    auto_update: false
+
+  # iTunes API (fallback)
+  itunes:
+    enabled: true
+
+# Server Settings
+server:
+  host: "0.0.0.0"
+  port: 5000
+  cache_duration: 3600  # API response cache duration in seconds
+
+# Performance
+performance:
+  # File check interval (seconds)
+  file_check_interval: 0.1
+  # Retry settings
+  retry:
+    max_attempts: 4
+    initial_delay: 2.0
+    exponential_backoff: true
+  # Preload next image in queue
+  preload_enabled: true
+
+# Platform-specific settings
+platform:
+  # Auto-detect platform and adjust settings
+  auto_detect: true
+  # Override platform (macos, linux, raspberry_pi)
+  override: ""
