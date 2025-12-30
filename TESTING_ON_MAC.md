@@ -14,13 +14,14 @@ brew install python3
 # Install SDL2 for pygame (required on macOS)
 brew install sdl2 sdl2_image sdl2_mixer sdl2_ttf
 
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate
+# Install uv (fast Python package manager)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Install Python packages
-pip install --upgrade pip
-pip install -r requirements.txt
+# Restart your shell or run:
+source $HOME/.cargo/env
+
+# Install Python packages with uv
+uv sync
 ```
 
 ### 2. Configuration
@@ -42,14 +43,12 @@ display:
 
 #### Terminal 1 - Start the Server
 ```bash
-source venv/bin/activate
-python3 server_app.py
+uv run python server_app.py
 ```
 
 #### Terminal 2 - Start the Display
 ```bash
-source venv/bin/activate
-python3 display_app.py
+uv run python display_app.py
 ```
 
 #### Access Web Interface
@@ -94,8 +93,8 @@ Open your browser to: `http://localhost:5000`
 ### pygame not working on macOS
 ```bash
 # Reinstall pygame with proper SDL2 support
-pip uninstall pygame
-pip install pygame --no-binary :all:
+uv pip uninstall pygame
+uv pip install pygame --no-binary :all:
 ```
 
 ### Display window too large

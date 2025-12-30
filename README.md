@@ -74,14 +74,16 @@ Perfect for testing before deploying to your Pi! See [TESTING_ON_MAC.md](TESTING
 # Install dependencies
 brew install python3 sdl2 sdl2_image sdl2_mixer sdl2_ttf
 
-# Setup
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+# Install uv (fast Python package manager)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source $HOME/.cargo/env
+
+# Install Python packages
+uv sync
 
 # Run (in separate terminals)
-python3 server_app.py
-python3 display_app.py
+uv run python server_app.py
+uv run python display_app.py
 
 # Open browser to http://localhost:5000
 ```

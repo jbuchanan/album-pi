@@ -41,20 +41,22 @@ sudo apt install -y \
     git
 
 # Create virtual environment
-echo "🐍 Creating Python virtual environment..."
-python3 -m venv venv
-source venv/bin/activate
+echo "🐍 Installing uv (fast Python package manager)..."
+# Install uv if not already installed
+if ! command -v uv &> /dev/null; then
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    # Add uv to PATH for current session
+    export PATH="$HOME/.cargo/bin:$PATH"
+fi
 
-# Upgrade pip
-pip install --upgrade pip
-
-# Install Python dependencies
-echo "📦 Installing Python packages..."
-pip install -r requirements.txt
+# Create virtual environment and install dependencies with uv
+echo "📦 Installing Python packages with uv..."
+uv venv
+uv pip install -e .
 
 # Create default fallback image
 echo "🖼️  Creating default fallback image..."
-python3 << 'EOF'
+uv run python << 'EOF'
 from PIL import Image, ImageDraw, ImageFont
 import os
 
@@ -119,6 +121,5 @@ echo "   sudo journalctl -u album-display -f"
 echo "   sudo journalctl -u album-server -f"
 echo ""
 echo "🔧 Manual testing:"
-echo "   source venv/bin/activate"
-echo "   python3 server_app.py &"
-echo "   python3 display_app.py"
+echo "   uv run python server_app.py &"
+echo "   uv run python display_app.py"
