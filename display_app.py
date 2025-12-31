@@ -267,8 +267,8 @@ class OverlayRenderer:
 
     def _render_qr_code(self, screen, metadata: Dict[str, str]):
         """Render QR code overlay"""
-        # Get URL from metadata
-        url = metadata.get('itunes_url') or metadata.get('spotify_url', '')
+        # Get URL from metadata - prioritize Spotify over iTunes
+        url = metadata.get('spotify_url') or metadata.get('itunes_url', '')
         if not url:
             return
 
@@ -276,12 +276,12 @@ class OverlayRenderer:
         if url in self.qr_cache:
             qr_surface = self.qr_cache[url]
         else:
-            # Generate QR code
+            # Generate QR code with white background for better scanning
             qr = qrcode.QRCode(version=1, box_size=3, border=2)
             qr.add_data(url)
             qr.make(fit=True)
 
-            qr_img = qr.make_image(fill_color="white", back_color="black")
+            qr_img = qr.make_image(fill_color="black", back_color="white")
 
             # Convert to pygame surface
             qr_size = self.config.get('overlays.qr_code.size', 150)

@@ -32,7 +32,7 @@ transitions:
 effects:
   # Ambient lighting (colored glow around edges)
   ambient_light:
-    enabled: true
+    enabled: false  # Disabled - causes light squares in corners
     intensity: 0.3  # 0.0 - 1.0
   # Blur background mode
   blur_background:
@@ -67,9 +67,9 @@ overlays:
 
   # QR Code (links to song on Spotify/Apple Music)
   qr_code:
-    enabled: false
-    position: "bottom-right"
-    size: 150
+    enabled: true  # Now links to Spotify (prioritized over iTunes)
+    position: "top-right"  # Moved to top to avoid overlap with metadata
+    size: 120  # Smaller for less intrusion
 
 # Music Sources
 music:
