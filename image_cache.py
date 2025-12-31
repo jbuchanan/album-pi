@@ -236,6 +236,36 @@ class ImageCache:
             'total_accesses': total_accesses
         }
 
+    def list_all(self) -> list:
+        """List all cached items with metadata"""
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT search_key, metadata, file_size, created_at, last_accessed, access_count
+            FROM cache
+            ORDER BY last_accessed DESC
+        """)
+
+        entries = []
+        for row in cursor.fetchall():
+            search_key, metadata_json, file_size, created_at, last_accessed, access_count = row
+            metadata = json.loads(metadata_json) if metadata_json else {}
+
+            entries.append({
+                'search_key': search_key,
+                'title': metadata.get('title', 'Unknown'),
+                'artist': metadata.get('artist', 'Unknown'),
+                'album': metadata.get('album', 'Unknown'),
+                'file_size_mb': file_size / 1024 / 1024,
+                'created_at': created_at,
+                'last_accessed': last_accessed,
+                'access_count': access_count
+            })
+
+        conn.close()
+        return entries
+
 if __name__ == "__main__":
     # Test cache
     cache = ImageCache()

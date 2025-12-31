@@ -11,6 +11,7 @@ import time
 import hashlib
 from typing import Dict, Any, Optional
 import base64
+import sqlite3
 
 from config_manager import get_config
 from image_cache import ImageCache
@@ -31,14 +32,16 @@ STATUS_FILE = 'display_status.txt'
 _api_cache = {}
 
 def get_image_size() -> int:
-    """Get target image size based on display resolution"""
-    width = config.get('display.width', 0)
-    if width == 0:
-        # If not detected yet, use configured or default
-        size = config.get('image.target_size', 720)
-        return size if size > 0 else 720
-    # Use display width for square displays
-    return width
+    """Get target image size - always fetch high resolution for best quality"""
+    # Always fetch maximum resolution (iTunes supports up to 3000x3000)
+    # The display will scale it down with high-quality scaling
+    configured_size = config.get('image.target_size', 0)
+    if configured_size > 0:
+        return configured_size
+
+    # Default to 2000x2000 for excellent quality on most displays
+    # iTunes supports up to 3000x3000, but 2000 is a good balance
+    return 2000
 
 def get_cached_api_response(search_term: str) -> Optional[Dict[str, Any]]:
     """Get cached API response if still valid"""
@@ -876,6 +879,66 @@ def clear_cache_endpoint():
         return jsonify({"success": True, "message": "Cache cleared successfully"})
     except Exception as e:
         return jsonify({"success": False, "message": f"Error clearing cache: {str(e)}"})
+
+@app.route('/cache/list', methods=['GET'])
+def list_cache():
+    """List all cached items"""
+    try:
+        items = image_cache.list_all()
+        return jsonify({"success": True, "items": items})
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Error listing cache: {str(e)}"})
+
+@app.route('/cache/load/<search_key>', methods=['POST'])
+def load_from_cache(search_key):
+    """Load a cached item and display it"""
+    try:
+        # Find the item in cache by search key
+        conn = sqlite3.connect(image_cache.db_path)
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT metadata, file_path
+            FROM cache
+            WHERE search_key = ?
+        """, (search_key,))
+
+        result = cursor.fetchone()
+        conn.close()
+
+        if not result:
+            return jsonify({"success": False, "message": "Item not found in cache"})
+
+        metadata_json, file_path = result
+        metadata = json.loads(metadata_json)
+
+        # Copy cached image to current
+        if os.path.exists(file_path):
+            shutil.copy(file_path, IMAGE_PATH)
+            save_metadata_atomic(metadata)
+            write_status('RUNNING')
+
+            return jsonify({
+                "success": True,
+                "message": f"Loaded from cache: {metadata.get('title', 'Unknown')}",
+                "metadata": metadata
+            })
+        else:
+            return jsonify({"success": False, "message": "Cached file not found"})
+
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Error loading from cache: {str(e)}"})
+
+@app.route('/config/reload', methods=['POST'])
+def reload_config():
+    """Reload configuration from file"""
+    try:
+        from config_manager import reload_config
+        global config
+        config = reload_config()
+        return jsonify({"success": True, "message": "Configuration reloaded successfully"})
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Error reloading config: {str(e)}"})
 
 if __name__ == "__main__":
     # Initialize image cache
