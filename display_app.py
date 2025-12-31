@@ -81,11 +81,14 @@ class ImageLoader:
                 time.sleep(check_interval)
 
     def _load_and_scale_image(self, path: str) -> pygame.Surface:
-        """Load and scale image to fit screen"""
+        """Load and scale image to fit screen with high quality"""
         image = pygame.image.load(path)
         width = self.config.get('display.width', 720)
         height = self.config.get('display.height', 720)
-        return pygame.transform.scale(image, (width, height))
+
+        # Use smoothscale for high-quality scaling (much better than scale())
+        # This uses a box filter for downscaling which produces crisp results
+        return pygame.transform.smoothscale(image, (width, height))
 
     def _load_metadata(self) -> Dict[str, str]:
         """Load metadata from JSON file"""
@@ -107,7 +110,7 @@ def load_fallback_image(config) -> pygame.Surface:
     try:
         if os.path.exists(FALLBACK_IMAGE):
             image = pygame.image.load(FALLBACK_IMAGE)
-            return pygame.transform.scale(image, (width, height))
+            return pygame.transform.smoothscale(image, (width, height))
     except pygame.error:
         pass
 
@@ -445,7 +448,7 @@ class TransitionManager:
 
         old_w = int(self.width * scale_old)
         old_h = int(self.height * scale_old)
-        old_scaled = pygame.transform.scale(self.current_image, (old_w, old_h))
+        old_scaled = pygame.transform.smoothscale(self.current_image, (old_w, old_h))
         old_scaled.set_alpha(alpha_old)
 
         old_x = -(old_w - self.width) // 2
@@ -457,7 +460,7 @@ class TransitionManager:
 
         new_w = int(self.width * scale_new)
         new_h = int(self.height * scale_new)
-        new_scaled = pygame.transform.scale(self.next_image, (new_w, new_h))
+        new_scaled = pygame.transform.smoothscale(self.next_image, (new_w, new_h))
         new_scaled.set_alpha(alpha_new)
 
         new_x = (self.width - new_w) // 2
