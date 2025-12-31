@@ -88,7 +88,7 @@ music:
 # Server Settings
 server:
   host: "0.0.0.0"
-  port: 5000
+  port: 5001  # Changed from 5000 to avoid conflict with macOS AirPlay Receiver
   cache_duration: 3600  # API response cache duration in seconds
 
 # Performance
