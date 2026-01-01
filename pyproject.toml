@@ -36,8 +36,8 @@ Homepage = "https://github.com/jbuchanan/album-pi"
 Repository = "https://github.com/jbuchanan/album-pi"
 Issues = "https://github.com/jbuchanan/album-pi/issues"
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
     "black>=23.0.0",

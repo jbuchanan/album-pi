@@ -287,6 +287,9 @@ class OverlayRenderer:
             qr_size = self.config.get('overlays.qr_code.size', 150)
             qr_img = qr_img.resize((qr_size, qr_size), PILImage.Resampling.NEAREST)
 
+            # Convert to RGB mode (QR codes are generated in '1' binary mode)
+            qr_img = qr_img.convert('RGB')
+
             # Convert PIL to pygame
             mode = qr_img.mode
             size = qr_img.size
