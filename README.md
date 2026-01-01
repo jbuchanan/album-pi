@@ -8,8 +8,8 @@ A beautiful, full-featured album art display system for Raspberry Pi with smooth
 - **Dynamic Resolution Detection**: Auto-detects your display size for optimal quality
 - **High-Resolution Images**: Automatically fetches up to 3000x3000px album art
 - **Multiple Transition Effects**: Choose from Fade, Slide, Zoom, or Random transitions
-- **Ambient Lighting**: Gorgeous color glow effects extracted from album art
 - **60 FPS Animations**: Buttery-smooth transitions
+- **Ambient Lighting**: Optional color glow effects extracted from album art (disabled by default)
 
 ### Information Overlays (Configurable)
 - **Metadata Display**: Song title, artist, and album information with elegant overlay
@@ -61,7 +61,7 @@ A beautiful, full-featured album art display system for Raspberry Pi with smooth
    ```
 
 4. **Access web interface:**
-   - Open browser to `http://[PI_IP_ADDRESS]:5000`
+   - Open browser to `http://[PI_IP_ADDRESS]:5001`
    - Search for any artist/song/album
    - Enjoy the display!
 
@@ -85,7 +85,7 @@ uv sync
 uv run python server_app.py
 uv run python display_app.py
 
-# Open browser to http://localhost:5000
+# Open browser to http://localhost:5001
 ```
 
 The system automatically detects macOS and runs in windowed mode for easy testing.
@@ -104,13 +104,13 @@ display:
 
 # Transition Effects
 transitions:
-  effect: "fade"        # fade, slide, zoom, or random
-  duration: 1.0         # seconds
+  effect: "slide"       # fade, slide, zoom, or random
+  duration: 2.0         # seconds
 
 # Visual Effects
 effects:
   ambient_light:
-    enabled: true
+    enabled: false      # Disabled by default (can cause corner artifacts)
     intensity: 0.3      # 0.0 - 1.0
 
 # Overlays
@@ -131,9 +131,9 @@ overlays:
     units: "imperial"   # imperial or metric
 
   qr_code:
-    enabled: false
-    position: "bottom-right"
-    size: 150
+    enabled: true       # Enabled by default, links to Spotify
+    position: "top-right"
+    size: 120
 ```
 
 ### Spotify Integration
@@ -167,23 +167,23 @@ For programmatic control:
 
 ```bash
 # Update display
-curl -X POST http://localhost:5000/update \
+curl -X POST http://localhost:5001/update \
   -H "Content-Type: application/json" \
   -d '{"search":"Pink Floyd Dark Side of the Moon"}'
 
 # Control display
-curl -X POST http://localhost:5000/pause
-curl -X POST http://localhost:5000/resume
-curl -X POST http://localhost:5000/stop
+curl -X POST http://localhost:5001/pause
+curl -X POST http://localhost:5001/resume
+curl -X POST http://localhost:5001/stop
 
 # Get current metadata
-curl http://localhost:5000/current
+curl http://localhost:5001/current
 
 # Get cache stats
-curl http://localhost:5000/cache/stats
+curl http://localhost:5001/cache/stats
 
 # Save configuration
-curl -X POST http://localhost:5000/config \
+curl -X POST http://localhost:5001/config \
   -H "Content-Type: application/json" \
   -d @config.json
 ```
@@ -280,10 +280,10 @@ python3 server_app.py
 
 ```bash
 # Check cache stats via API
-curl http://localhost:5000/cache/stats
+curl http://localhost:5001/cache/stats
 
 # Clear cache via API
-curl -X POST http://localhost:5000/cache/clear
+curl -X POST http://localhost:5001/cache/clear
 
 # Manually delete cache
 rm -rf image_cache/
@@ -292,8 +292,8 @@ rm -rf image_cache/
 ### Network Issues
 
 ```bash
-# Check if port 5000 is accessible
-curl http://localhost:5000
+# Check if port 5001 is accessible
+curl http://localhost:5001
 
 # Find Pi's IP address
 hostname -I
@@ -333,8 +333,8 @@ image:
 
 - ✅ **Dynamic Resolution Detection**: Auto-adapts to any display size
 - ✅ **Multiple Transition Effects**: Fade, slide, zoom, and random
-- ✅ **Ambient Lighting**: Color-reactive glow effects
-- ✅ **Configurable Overlays**: Clock, weather, QR codes
+- ✅ **Ambient Lighting**: Optional color-reactive glow effects
+- ✅ **Configurable Overlays**: Clock, weather, QR codes (QR enabled by default)
 - ✅ **Spotify Integration**: Superior metadata and artwork
 - ✅ **Persistent Caching**: SQLite database with smart cleanup
 - ✅ **Enhanced Error Handling**: Automatic retry with backoff
@@ -353,14 +353,15 @@ transitions:
   duration: 0.5    # Fast and snappy
 ```
 
-### Ambient Light Intensity
+### Ambient Light (Optional)
+
+Ambient lighting is disabled by default as it can cause visual artifacts in corners. If you want to enable it:
 
 ```yaml
 effects:
   ambient_light:
-    intensity: 0.5   # Brighter glow
-    # or
-    intensity: 0.1   # Subtle effect
+    enabled: true    # Enable the feature
+    intensity: 0.3   # Adjust brightness (0.1 for subtle, 0.5 for brighter)
 ```
 
 ### Multiple Displays
@@ -369,11 +370,11 @@ Run multiple instances with different configs:
 
 ```bash
 # Instance 1
-python3 server_app.py &  # Port 5000
+uv run python server_app.py &  # Port 5001 (default)
 
 # Instance 2 (different directory)
 cd ../album-pi-2
-python3 server_app.py &  # Configure different port in config.yaml
+uv run python server_app.py &  # Configure different port in config.yaml
 ```
 
 ## 🤝 Contributing

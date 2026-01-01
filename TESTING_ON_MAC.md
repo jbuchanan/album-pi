@@ -52,7 +52,7 @@ uv run python display_app.py
 ```
 
 #### Access Web Interface
-Open your browser to: `http://localhost:5000`
+Open your browser to: `http://localhost:5001`
 
 ## Platform Differences
 
@@ -69,14 +69,15 @@ Open your browser to: `http://localhost:5000`
 ## Testing Features
 
 ### Test Transition Effects
+The default transition is "slide" with 2.0 second duration. To test other effects:
 1. Open web interface
-2. Change "Transition Effect" to: Fade, Slide, Zoom, or Random
+2. Change "Transition Effect" to: Fade, Zoom, or Random
 3. Search for different albums to see transitions
 
 ### Test Overlays
+- **QR Codes**: Enabled by default in top-right corner, links to Spotify
 - **Clock**: Enable in config to see current time
-- **Ambient Lighting**: Toggle to see color glow effects
-- **QR Codes**: Enable to show scannable links
+- **Ambient Lighting**: Disabled by default (can cause corner artifacts), but can be enabled in config
 
 ### Test Caching
 1. Search for an album
@@ -105,11 +106,11 @@ display:
   height: 600
 ```
 
-### Port 5000 already in use
-Change the port in `config.yaml`:
+### Port Configuration
+The default port is now 5001 to avoid conflicts with macOS AirPlay Receiver (which uses port 5000). If you need to use a different port, change it in `config.yaml`:
 ```yaml
 server:
-  port: 5001
+  port: 5002  # Or any other available port
 ```
 
 ## Transferring to Raspberry Pi
