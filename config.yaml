@@ -24,9 +24,9 @@ image:
 # Transition Effects
 transitions:
   # Effect type: fade, slide, zoom, blur, random
-  effect: "fade"
+  effect: "slide"  # Changed to slide to make it more obvious
   # Duration in seconds
-  duration: 1.0
+  duration: 2.0  # Increased to make transitions more visible
 
 # Visual Effects
 effects:

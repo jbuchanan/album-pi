@@ -598,6 +598,7 @@ def run_display():
         # Check for new content
         new_content = image_loader.get_new_content()
         if new_content and not transition_manager.is_transitioning:
+            print(f"Starting {transition_manager.effect} transition for: {new_content['metadata'].get('title', 'Unknown')}")
             transition_manager.start_transition(current_image, new_content['image'])
             current_metadata = new_content['metadata']
             dominant_colors = new_content.get('dominant_colors', [(40, 40, 40)])
