@@ -9,8 +9,8 @@ User=pi
 Group=pi
 WorkingDirectory=/home/pi/album-pi
 
-# Server app
-ExecStart=/home/pi/album-pi/venv/bin/python /home/pi/album-pi/server_app.py
+# Server app (using uv for dependency management)
+ExecStart=/home/pi/.cargo/bin/uv run python server_app.py
 
 # Restart settings
 Restart=always
